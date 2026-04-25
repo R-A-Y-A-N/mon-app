@@ -1,2 +1,2 @@
-'console.log("Test echoue !");' 
-'process.exit(1);' 
+console.log("Test echoue !"); 
+process.exit(1); 
