@@ -2,12 +2,10 @@ pipeline {
     agent any
 
     stages {
+
         stage('Build') {
             steps {
                 echo '=== Etape 1 : Build ==='
-                echo 'Compilation du projet en cours...'
-                
-                // Compatible Windows + Linux
                 script {
                     if (isUnix()) {
                         sh 'cat README.md'
@@ -18,16 +16,20 @@ pipeline {
             }
         }
 
+        stage('Debug Test') {
+            steps {
+                bat 'type test.js'
+            }
+        }
+
         stage('Test') {
             steps {
                 echo '=== Etape 2 : Test ==='
-                echo 'Execution des tests...'
-
                 script {
                     if (isUnix()) {
                         sh 'node test.js'
                     } else {
-                        bat 'node test.js'
+                        bat 'node test.js || exit 1'
                     }
                 }
             }
@@ -36,7 +38,6 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo '=== Etape 3 : Deploy ==='
-                echo 'Deploiement en production...'
                 echo 'Application deployee avec succes !'
             }
         }
@@ -53,9 +54,4 @@ pipeline {
             echo 'ECHEC : une etape a echoue'
         }
     }
-    stage('Debug Test') {
-    steps {
-        bat 'type test.js'
-    }
-}
 }
