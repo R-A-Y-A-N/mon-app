@@ -53,4 +53,9 @@ pipeline {
             echo 'ECHEC : une etape a echoue'
         }
     }
+    stage('Debug Test') {
+    steps {
+        bat 'type test.js'
+    }
+}
 }
