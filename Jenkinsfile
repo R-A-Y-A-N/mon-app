@@ -21,12 +21,11 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                echo '🔨 Build du projet...'
-                bat 'npm run build'
-            }
-        }
+       stage('Build') {
+    steps {
+        echo '🔨 Pas de build pour ce projet'
+    }
+}
 
         stage('Test') {
             steps {
