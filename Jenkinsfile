@@ -1,41 +1,79 @@
 pipeline {
     agent any
 
+    environment {
+        DEPLOY_DIR = "C:\\deploy\\mon-app"
+    }
+
     stages {
+
+        stage('Clone Repo') {
+            steps {
+                echo '📥 Clonage du projet depuis GitHub...'
+                git branch: 'main',
+                    url: 'https://github.com/TON-USER/TON-REPO.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                echo '📦 Installation des dépendances...'
+                bat 'npm install'
+            }
+        }
+
         stage('Build') {
             steps {
-                echo '=== Etape 1 : Build ==='
-                echo 'Compilation du projet en cours...'
-                bat 'type README.md'
+                echo '🔨 Build du projet...'
+                bat 'npm run build'
             }
         }
 
         stage('Test') {
             steps {
-                echo '=== Etape 2 : Test ==='
-                echo 'Execution des tests...'
-                bat 'node test.js'
+                echo '🧪 Exécution des tests...'
+                bat 'npm test'
             }
         }
 
-        stage('Deploy') {
+        stage('Prepare Deploy Folder') {
             steps {
-                echo '=== Etape 3 : Deploy ==='
-                echo 'Deploiement en production...'
-                echo 'Application deployee avec succes !'
+                echo '📁 Préparation du dossier de déploiement...'
+                bat """
+                if not exist %DEPLOY_DIR% mkdir %DEPLOY_DIR%
+                """
+            }
+        }
+
+        stage('Deploy Local') {
+            steps {
+                echo '🚀 Déploiement sur machine locale...'
+                bat """
+                xcopy /E /Y /I build %DEPLOY_DIR%
+                """
+            }
+        }
+
+        stage('Run App') {
+            steps {
+                echo '▶ Lancement de l’application...'
+                bat """
+                cd %DEPLOY_DIR%
+                start cmd /k node app.js
+                """
             }
         }
     }
 
     post {
-        always {
-            echo 'Pipeline termine !'
-        }
         success {
-            echo 'SUCCES : toutes les etapes sont passees'
+            echo '✅ Déploiement réussi sur machine locale'
         }
         failure {
-            echo 'ECHEC : une etape a echoue'
+            echo '❌ Échec du pipeline'
+        }
+        always {
+            echo '🏁 Pipeline terminé'
         }
     }
-} 
+}
