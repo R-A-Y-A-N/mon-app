@@ -8,13 +8,12 @@ pipeline {
     stages {
 
         stage('Clone Repo') {
-            steps {
-                echo '📥 Clonage du projet depuis GitHub...'
-                git branch: 'main',
-                    url: 'https://github.com/TON-USER/TON-REPO.git'
-            }
-        }
-
+    steps {
+        git credentialsId: 'github-token',
+            url: 'https://github.com/R-A-Y-A-N/mon-app.git',
+            branch: 'main'
+    }
+}
         stage('Install Dependencies') {
             steps {
                 echo '📦 Installation des dépendances...'
