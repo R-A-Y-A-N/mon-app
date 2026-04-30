@@ -43,14 +43,14 @@ pipeline {
             }
         }
 
-        stage('Deploy Local') {
-            steps {
-                echo '🚀 Déploiement sur machine locale...'
-                bat """
-                xcopy /E /Y /I build %DEPLOY_DIR%
-                """
-            }
-        }
+       stage('Deploy Local') {
+    steps {
+        echo '🚀 Déploiement sur machine locale...'
+        bat '''
+        xcopy /E /Y /I * C:\\deploy\\mon-app
+        '''
+    }
+}
 
         stage('Run App') {
             steps {
